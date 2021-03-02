@@ -1,30 +1,28 @@
 import React from 'react';
+import GifGridItem from './GifGridItem';
+import {useFetchGifs} from '../hooks/useFetchGifs';
 
 const GifGrid = ( {category} ) => {
 
-     const getGifs = async() => {
-          const url = 'https://api.giphy.com/v1/gifs/search?q=pokeon&limit=10&api_key=C4JbEi66m6MiNtf98vfacDlrB4RgEeq6'
-          const resp = await fetch(url);
-          const {data} = await resp.json();
-
-          const gifs = data.map(img => {
-               return{
-                    id: img.id,
-                    title: img.title,
-                    url: img.images.downsized_medium.url
-               }
-          })
-
-          console.log(gifs);
-     }
-
-     getGifs();
-
+     const {data: images, loading} = useFetchGifs( category );
 
      return(
           <>
-               <h3>{ category }</h3>
+               <h3 className="animated_animated animate__flash">{ category }</h3>
+               { loading && <p>Loading</p> }
+               <div className="cardGrid">
+               
+               {
+                    images.map( img => (
+                    <GifGridItem 
+                         key ={ img.id } 
+                         { ...img } 
+                    />
+               ))   
+               }
+               </div>
           </>
+          
      )
 }
 
